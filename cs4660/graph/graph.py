@@ -188,3 +188,5 @@ class ObjectOriented(object):
     def remove_edge(self, edge):
         pass
 
+a=AdjacencyList()
+print(a.add_edge(Edge(Node(0),Node(1),1)))
