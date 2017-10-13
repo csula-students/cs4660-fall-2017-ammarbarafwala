@@ -124,6 +124,7 @@ class AdjacencyList(object):
         if(edge.to_node in self.adjacency_list[edge.from_node]):
             return False
         self.adjacency_list[edge.from_node].append(edge.to_node)
+        self.adjacency_list[edge.from_node][edge.to_node]=edge.weight
         return True
 
     def remove_edge(self, edge):
