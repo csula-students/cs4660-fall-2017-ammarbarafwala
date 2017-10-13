@@ -1,0 +1,187 @@
+[1mdiff --git a/cs4660/simple/math.py b/cs4660/simple/math.py[m
+[1mindex bf5d0ef..b842921 100644[m
+[1m--- a/cs4660/simple/math.py[m
+[1m+++ b/cs4660/simple/math.py[m
+[36m@@ -6,4 +6,4 @@[m [mdef add(n_1, n_2):[m
+ [m
+ def multiply(n_1, n_2):[m
+     """multiple returns multiplication of two numbers"""[m
+[31m-    return n_1*n_2[m
+[32m+[m[32m    return n_1 * n_2[m
+[1mdiff --git a/cs4660/test/fixtures/array.txt b/cs4660/test/fixtures/array.txt[m
+[1mnew file mode 100644[m
+[1mindex 0000000..c5fd598[m
+[1m--- /dev/null[m
+[1m+++ b/cs4660/test/fixtures/array.txt[m
+[36m@@ -0,0 +1,5 @@[m
+[32m+[m[32m1 5 4 2 3 5 6 7[m
+[32m+[m[32m5 4 3 2 6 7 8 1[m
+[32m+[m[32m8 4 2 1 6 8 9 0[m
+[32m+[m[32m8 3 8 1 7 9 0 1[m
+[32m+[m[32m4 6 7 1 43 8 2 -5[m
+[1mdiff --git a/cs4660/test/test_file.py b/cs4660/test/test_file.py[m
+[1mnew file mode 100644[m
+[1mindex 0000000..52fc333[m
+[1m--- /dev/null[m
+[1m+++ b/cs4660/test/test_file.py[m
+[36m@@ -0,0 +1,18 @@[m
+[32m+[m[32m"""test_file is a testing specs for some simple file io operations"""[m
+[32m+[m
+[32m+[m[32mimport unittest[m
+[32m+[m
+[32m+[m[32mfrom simple import math[m
+[32m+[m
+[32m+[m[32mclass MathTestCase(unittest.TestCase):[m
+[32m+[m[32m    """MathTestCase defines test cases for math module"""[m
+[32m+[m[32m    def test_add_method(self):[m
+[32m+[m[32m        """test_add_method simply test the add method"""[m
+[32m+[m[32m        self.assertEqual(3, math.add(1, 2))[m
+[32m+[m[32m        self.assertEqual(6, math.add(3, 3))[m
+[32m+[m
+[32m+[m[32m    def test_multiply_method(self):[m
+[32m+[m[32m        """test multiply result"""[m
+[32m+[m[32m        self.assertEqual(6, math.multiply(2, 3))[m
+[32m+[m[32m        self.assertEqual(8, math.multiply(2, 4))[m
+[32m+[m[32m        self.assertEqual(8, math.multiply(4, 2))[m
+[1mdiff --git a/cs4660/test/test_tutorial.py b/cs4660/test/test_tutorial.py[m
+[1mnew file mode 100644[m
+[1mindex 0000000..9750ce2[m
+[1m--- /dev/null[m
+[1m+++ b/cs4660/test/test_tutorial.py[m
+[36m@@ -0,0 +1,62 @@[m
+[32m+[m[32m"""test_tutorial is a testing specs for basic Python stuff"""[m
+[32m+[m
+[32m+[m[32mimport unittest[m
+[32m+[m
+[32m+[m[32mfrom tutorial import lists[m
+[32m+[m[32mfrom tutorial import files[m
+[32m+[m
+[32m+[m[32mclass ListTestCase(unittest.TestCase):[m
+[32m+[m[32m    """ListTestCase defines basic list tests"""[m
+[32m+[m
+[32m+[m[32m    def setUp(self):[m
+[32m+[m[32m        self.l_1 = [1, 2, 3][m
+[32m+[m[32m        self.l_2 = [4, 5, 6][m
+[32m+[m[32m        self.l_3 = [5, 6, 7, 8][m
+[32m+[m
+[32m+[m[32m    def test_first_item(self):[m
+[32m+[m[32m        """test_first_item test if the method can correctly return the first item"""[m
+[32m+[m[32m        self.assertEqual(1, lists.get_first_item(self.l_1))[m
+[32m+[m[32m        self.assertEqual(4, lists.get_first_item(self.l_2))[m
+[32m+[m
+[32m+[m[32m    def test_last_item(self):[m
+[32m+[m[32m        """test retrieving last item"""[m
+[32m+[m[32m        self.assertEqual(3, lists.get_last_item(self.l_1))[m
+[32m+[m[32m        self.assertEqual(6, lists.get_last_item(self.l_2))[m
+[32m+[m
+[32m+[m[32m    def test_second_and_third_item(self):[m
+[32m+[m[32m        """test retrieving sublist"""[m
+[32m+[m[32m        self.assertEqual([2, 3], lists.get_second_and_third_items(self.l_1))[m
+[32m+[m[32m        self.assertEqual([6, 7], lists.get_second_and_third_items(self.l_3))[m
+[32m+[m
+[32m+[m[32m    def test_get_sum(self):[m
+[32m+[m[32m        """test to get sum of number list"""[m
+[32m+[m[32m        self.assertEqual(6, lists.get_sum(self.l_1))[m
+[32m+[m[32m        self.assertEqual(15, lists.get_sum(self.l_2))[m
+[32m+[m
+[32m+[m[32m    def test_get_avg(self):[m
+[32m+[m[32m        """test to get average of the number list"""[m
+[32m+[m[32m        self.assertEqual(2, lists.get_avg(self.l_1))[m
+[32m+[m[32m        self.assertEqual(5, lists.get_avg(self.l_2))[m
+[32m+[m
+[32m+[m[32mclass SimpleFileTestCase(unittest.TestCase):[m
+[32m+[m[32m    """SimplefileTestCase tests the file read implementation"""[m
+[32m+[m
+[32m+[m[32m    def setUp(self):[m
+[32m+[m[32m        file_path = './test/fixtures/array.txt'[m
+[32m+[m[32m        self.simple_file = files.SimpleFile(file_path)[m
+[32m+[m
+[32m+[m[32m    def test_mean(self):[m
+[32m+[m[32m        """test_mean tests to see if file can get mean properly"""[m
+[32m+[m[32m        self.assertEqual(4.125, self.simple_file.get_mean(0))[m
+[32m+[m
+[32m+[m[32m    def test_max(self):[m
+[32m+[m[32m        """test_max tests to see if the file can retrieve max value"""[m
+[32m+[m[32m        self.assertEqual(9, self.simple_file.get_max(3))[m
+[32m+[m
+[32m+[m[32m    def test_min(self):[m
+[32m+[m[32m        """test_min tests to see if the file can retrieve min value"""[m
+[32m+[m[32m        self.assertEqual(-5, self.simple_file.get_min(4))[m
+[32m+[m
+[32m+[m[32m    def test_sum(self):[m
+[32m+[m[32m        """test_sum tests to see if the file can retrieve sum value"""[m
+[32m+[m[32m        self.assertEqual(36, self.simple_file.get_sum(1))[m
+[1mdiff --git a/cs4660/tutorial/__init__.py b/cs4660/tutorial/__init__.py[m
+[1mnew file mode 100644[m
+[1mindex 0000000..e69de29[m
+[1mdiff --git a/cs4660/tutorial/files.py b/cs4660/tutorial/files.py[m
+[1mnew file mode 100644[m
+[1mindex 0000000..3b7d0ab[m
+[1m--- /dev/null[m
+[1m+++ b/cs4660/tutorial/files.py[m
+[36m@@ -0,0 +1,38 @@[m
+[32m+[m[32m"""Files tests simple file read related operations"""[m
+[32m+[m
+[32m+[m[32mclass SimpleFile(object):[m
+[32m+[m[32m    """SimpleFile tests using file read api to do some simple math"""[m
+[32m+[m[32m    def __init__(self, file_path):[m
+[32m+[m[32m        self.numbers = [][m
+[32m+[m[32m        """[m
+[32m+[m[32m        TODO: reads the file by path and parse content into two[m
+[32m+[m[32m        dimension array (numbers)[m
+[32m+[m[32m        """[m
+[32m+[m
+[32m+[m[32m    def get_mean(self, line_number):[m
+[32m+[m[32m        """[m
+[32m+[m[32m        get_mean retrieves the mean value of the list by line_number (starts[m
+[32m+[m[32m        with zero)[m
+[32m+[m[32m        """[m
+[32m+[m[32m        pass[m
+[32m+[m
+[32m+[m[32m    def get_max(self, line_number):[m
+[32m+[m[32m        """[m
+[32m+[m[32m        get_max retrieves the maximum value of the list by line_number (starts[m
+[32m+[m[32m        with zero)[m
+[32m+[m[32m        """[m
+[32m+[m[32m        pass[m
+[32m+[m
+[32m+[m[32m    def get_min(self, line_number):[m
+[32m+[m[32m        """[m
+[32m+[m[32m        get_min retrieves the minimum value of the list by line_number (starts[m
+[32m+[m[32m        with zero)[m
+[32m+[m[32m        """[m
+[32m+[m[32m        pass[m
+[32m+[m
+[32m+[m[32m    def get_sum(self, line_number):[m
+[32m+[m[32m        """[m
+[32m+[m[32m        get_sum retrieves the sumation of the list by line_number (starts with[m
+[32m+[m[32m        zero)[m
+[32m+[m[32m        """[m
+[32m+[m[32m        pass[m
+[1mdiff --git a/cs4660/tutorial/lists.py b/cs4660/tutorial/lists.py[m
+[1mnew file mode 100644[m
+[1mindex 0000000..e64cc9a[m
+[1m--- /dev/null[m
+[1m+++ b/cs4660/tutorial/lists.py[m
+[36m@@ -0,0 +1,21 @@[m
+[32m+[m[32m"""Lists defines simple list related operations"""[m
+[32m+[m
+[32m+[m[32mdef get_first_item(li):[m
+[32m+[m[32m    """Return the first item from the list"""[m
+[32m+[m[32m    pass[m
+[32m+[m
+[32m+[m[32mdef get_last_item(li):[m
+[32m+[m[32m    """Return the last item from the list"""[m
+[32m+[m[32m    pass[m
+[32m+[m
+[32m+[m[32mdef get_second_and_third_items(li):[m
+[32m+[m[32m    """Return second and third item from the list"""[m
+[32m+[m[32m    pass[m
+[32m+[m
+[32m+[m[32mdef get_sum(li):[m
+[32m+[m[32m    """Return the sum of the list items"""[m
+[32m+[m[32m    pass[m
+[32m+[m
+[32m+[m[32mdef get_avg(li):[m
+[32m+[m[32m    """Returns the average of the list items"""[m
+[32m+[m[32m    pass[m
