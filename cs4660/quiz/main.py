@@ -119,6 +119,40 @@ def bfs(initial_id, dest_id):
     route_list.reverse()
     return route_list
 
+def dijkstra(initial_node, dest_node):
+    Q = {}
+    visited_nodes = []
+    grey_nodes = []
+    parent = {}
+    nodes_distance = {}
+    Q[initial_node] = 0
+    parent[initial_node] = None
+    nodes_distance[initial_node] = 0
+    last_node = dest_node
+    visited_nodes.append(initial_node)
+    while (bool(Q)):
+        current_node = min(Q, key=Q.get)
+        Q.pop(current_node)
+        visited_nodes.append(current_node)
+        room_state = get_state(current_node)
+        for each_neighbor in room_state['neighbors']:
+            neighbor=each_neighbor['id']
+            distance=transition_state(current_node,neighbor )['event']['effect']
+            if ((neighbor not in visited_nodes and neighbor not in grey_nodes) or (nodes_distance[neighbor]>nodes_distance[current_node] + distance)):
+                Q[neighbor] = nodes_distance[current_node] + distance
+                nodes_distance[neighbor] = nodes_distance[current_node] + distance
+                parent[neighbor] = current_node
+                grey_nodes.append(neighbor)
+        if (dest_node in visited_nodes):
+            break
+    list = []
+    while parent[last_node] is not None:
+        list = [parent[last_node]+':'+last_node] + list
+        last_node = parent[last_node]
+    #print(list)
+    return list
+    pass
+
 if __name__ == "__main__":
 
     # Your code starts here

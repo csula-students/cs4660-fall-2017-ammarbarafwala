@@ -60,6 +60,34 @@ def dijkstra_search(graph, initial_node, dest_node):
     uses graph to do search from the initial_node to dest_node
     returns a list of actions going from the initial node to dest_node
     """
+    Q = {}
+    visited_nodes = []
+    grey_nodes = []
+    parent = {}
+    nodes_distance = {}
+    Q[initial_node] = 0
+    parent[initial_node] = None
+    nodes_distance[initial_node] = 0
+    last_node = dest_node
+    visited_nodes.append(initial_node)
+    while (bool(Q)):
+        current_node = min(Q, key=Q.get)
+        Q.pop(current_node)
+        visited_nodes.append(current_node)
+        for neighbor in graph.neighbors(current_node):
+            if ((neighbor not in visited_nodes and neighbor not in grey_nodes) or (nodes_distance[neighbor]>nodes_distance[current_node] + graph.distance(current_node, neighbor))):
+                Q[neighbor] = nodes_distance[current_node] + graph.distance(current_node, neighbor)
+                nodes_distance[neighbor] = nodes_distance[current_node] + graph.distance(current_node, neighbor)
+                parent[neighbor] = current_node
+                grey_nodes.append(neighbor)
+        if (dest_node in visited_nodes):
+            break
+    list = []
+    while parent[last_node] is not None:
+        list = [graph.get_edge(parent[last_node], last_node)] + list
+        last_node = parent[last_node]
+    #print(list)
+    return list
     pass
 
 def a_star_search(graph, initial_node, dest_node):
