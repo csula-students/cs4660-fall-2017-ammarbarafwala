@@ -210,7 +210,7 @@ class AdjacencyMatrix(object):
         return self.nodes.index(node)
 
     def get_edge(self,node_1,node_2):
-        return self.adjacency_matrix[self.__get_node_index(node_1)][self.__get_node_index(node_2)]
+        return Edge(node_1,node_2,self.adjacency_matrix[self.__get_node_index(node_1)][self.__get_node_index(node_2)])
 
 class ObjectOriented(object):
     """ObjectOriented defines the edges and nodes as both list"""
