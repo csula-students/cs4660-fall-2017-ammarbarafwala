@@ -6,7 +6,6 @@ to f1f131f647621a4be7c71292e79613f9
 TODO: implement BFS
 TODO: implement Dijkstra utilizing the path with highest effect number
 """
-from graph import graph
 import json
 from queue import Queue
 import codecs
@@ -151,7 +150,6 @@ def dijkstra(initial_node, dest_node):
         last_node = parent[last_node]
     #print(list)
     return list
-    pass
 
 if __name__ == "__main__":
 
