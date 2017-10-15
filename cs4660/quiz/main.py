@@ -7,7 +7,8 @@ TODO: implement BFS
 TODO: implement Dijkstra utilizing the path with highest effect number
 """
 import json
-from queue import Queue
+import time
+from collections import deque
 import codecs
 
 
@@ -88,75 +89,51 @@ def __json_request(target_url, body):
 
     return response
 
+def route_list(initial_id, current_id, G, G_name):
+    route_list = []
+    while current_id != initial_id:
+        parent_id = G[current_id]
+        route_list.append(G_name[parent_id] + '(' + parent_id + '):' 
+        	+ G_name[current_id] + '(' + current_id + '):'
+            + str(transition_state(parent_id, current_id)['event']['effect']))
+        current_id = parent_id
+    route_list.reverse()
+    return  route_list
+
+
 def bfs(initial_id, dest_id):
     G = {}
-    queue = Queue ()
-    not_found = True   
-    queue.put(initial_id)
-    while queue.not_empty and not_found:
-        parent_id=queue.get()
+    G_name={}
+    queue = deque()
+    not_found = True
+    queue.appendleft(initial_id)
+    while queue and not_found:
+        parent_id=queue.pop()
         room_state = get_state(parent_id)
+        G_name[parent_id]=room_state['location']['name']
         for each_node in room_state['neighbors']:
             if each_node['id'] not in G:
                 G[each_node['id']]=parent_id
                 if dest_id==each_node['id']:
                     not_found = False
                     break
-                queue.put(each_node['id'])
-    route_list=[]
-    current_id=dest_id
-    room_state=get_state(current_id)
-    current_name=room_state['location']['name']+'('+current_id+")"
-    while current_id!=initial_id:
-        parent_id=G[current_id]
-        room_state=get_state(parent_id)
-        parent_name=room_state['location']['name']+'('+parent_id+")"
-        route_list.append(parent_name+':'+current_name+":"+str(transition_state(parent_id,current_id )['event']['effect']))
-        current_id=parent_id
-        room_state=get_state(current_id)
-        current_name=room_state['location']['name']+'('+current_id+")"
-    route_list.reverse()
-    return route_list
+                queue.appendleft(each_node['id'])
+    room_state = get_state(dest_id)
+    G_name[dest_id] = room_state['location']['name']
+    return route_list(initial_id,dest_id,G,G_name)
 
 def dijkstra(initial_node, dest_node):
-    Q = {}
-    visited_nodes = []
-    grey_nodes = []
-    parent = {}
-    nodes_distance = {}
-    Q[initial_node] = 0
-    parent[initial_node] = None
-    nodes_distance[initial_node] = 0
-    last_node = dest_node
-    visited_nodes.append(initial_node)
-    while (bool(Q)):
-        current_node = min(Q, key=Q.get)
-        Q.pop(current_node)
-        visited_nodes.append(current_node)
-        room_state = get_state(current_node)
-        for each_neighbor in room_state['neighbors']:
-            neighbor=each_neighbor['id']
-            distance=transition_state(current_node,neighbor )['event']['effect']
-            if ((neighbor not in visited_nodes and neighbor not in grey_nodes) or (nodes_distance[neighbor]>nodes_distance[current_node] + distance)):
-                Q[neighbor] = nodes_distance[current_node] + distance
-                nodes_distance[neighbor] = nodes_distance[current_node] + distance
-                parent[neighbor] = current_node
-                grey_nodes.append(neighbor)
-        if (dest_node in visited_nodes):
-            break
-    list = []
-    while parent[last_node] is not None:
-        list = [parent[last_node]+':'+last_node] + list
-        last_node = parent[last_node]
-    #print(list)
-    return list
+    
+    pass
 
 if __name__ == "__main__":
 
     # Your code starts here
     empty_room = get_state('7f3dc077574c013d98b2de8f735058b4')
     next_room = get_state("44dfaae131fa9d0a541c3eb790b57b00")
+    start_time = time.time()
     path=bfs('7f3dc077574c013d98b2de8f735058b4','f1f131f647621a4be7c71292e79613f9')
-    print(empty_room)
-    # for each_value in path:
-    #     print(each_value)
+    # print(empty_room)
+    for each_value in path:
+        print(each_value)
+    print("--- %s seconds ---" % (time.time() - start_time))

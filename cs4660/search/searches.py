@@ -2,23 +2,22 @@
 Searches module defines all different search algorithms
 """
 
-from queue import Queue
-from graph import graph
+from collections import deque
 
 def bfs(graph, initial_node, dest_node):
     G = {}
-    queue = Queue ()
+    queue = deque()
     not_found = True
-    queue.put(initial_node)
-    while queue.not_empty and not_found:
-        parent_node=queue.get()
+    queue.appendleft(initial_node)
+    while queue and not_found:
+        parent_node=queue.pop()
         for each_node in graph.neighbors(parent_node):
             if each_node not in G:
                 G[each_node]=parent_node
                 if dest_node==each_node:
                     not_found = False
                     break
-                queue.put(each_node)
+                queue.appendleft(each_node)
     route_list=[]
     current_node=dest_node
     while current_node!=initial_node:
@@ -249,13 +248,8 @@ def get_Euclidean_distance(node1,node2):
 # graph_2s = list(map(construct_graph(graph_2_path), graph_2s))
 
 # for g in graph_1s:
-#     print( [
-#                     graph.Edge(graph.Node(1), graph.Node(2), 1),
-#                     graph.Edge(graph.Node(2), graph.Node(4), 1),
-#                     graph.Edge(graph.Node(4), graph.Node(5), 1),
-#                     graph.Edge(graph.Node(5), graph.Node(0), 1),
-#                     graph.Edge(graph.Node(0), graph.Node(7), 1),
-#                     graph.Edge(graph.Node(7), graph.Node(8), 1)
-#                 ] ==
-#                 dfs(g, graph.Node(1), graph.Node(8)))
+#     start_time = time.time()
+#     print(bfs(g, graph.Node(1), graph.Node(8)))
+
+#     print(time.time()," ", start_time)
 #     break
