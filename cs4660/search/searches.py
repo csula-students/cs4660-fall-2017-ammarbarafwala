@@ -1,7 +1,7 @@
 """
 Searches module defines all different search algorithms
 """
-
+import heapq
 from collections import deque
 
 def bfs(graph, initial_node, dest_node):
@@ -29,7 +29,6 @@ def bfs(graph, initial_node, dest_node):
 
 def dfs(graph, initial_node, dest_node):
     node_path = dfs_helper(graph,initial_node,dest_node, {},[])
-    
     edge_path=[]
     if node_path: 
         node_1=node_path[0]
@@ -59,34 +58,40 @@ def dijkstra_search(graph, initial_node, dest_node):
     uses graph to do search from the initial_node to dest_node
     returns a list of actions going from the initial node to dest_node
     """
-    Q = {}
-    visited_nodes = []
-    grey_nodes = []
-    parent = {}
-    nodes_distance = {}
-    Q[initial_node] = 0
-    parent[initial_node] = None
-    nodes_distance[initial_node] = 0
-    last_node = dest_node
-    visited_nodes.append(initial_node)
-    while (bool(Q)):
-        current_node = min(Q, key=Q.get)
-        Q.pop(current_node)
-        visited_nodes.append(current_node)
-        for neighbor in graph.neighbors(current_node):
-            if ((neighbor not in visited_nodes and neighbor not in grey_nodes) or (nodes_distance[neighbor]>nodes_distance[current_node] + graph.distance(current_node, neighbor))):
-                Q[neighbor] = nodes_distance[current_node] + graph.distance(current_node, neighbor)
-                nodes_distance[neighbor] = nodes_distance[current_node] + graph.distance(current_node, neighbor)
-                parent[neighbor] = current_node
-                grey_nodes.append(neighbor)
-        if (dest_node in visited_nodes):
-            break
-    list = []
-    while parent[last_node] is not None:
-        list = [graph.get_edge(parent[last_node], last_node)] + list
-        last_node = parent[last_node]
-    #print(list)
-    return list
+    queue = []
+    G = {}
+    heapq.heapify(queue)
+    heapq.heappush(queue, Data(initial_node,None,0))
+    while queue:
+        node=heapq.heappop(queue)
+        for each_node in graph.neighbors(node.data):
+            path_cost=node.cost + graph.distance(node.data, each_node)
+            if each_node not in G or G[each_node].cost>path_cost:
+                data=Data(each_node, node.data, path_cost)
+                G[each_node]=data
+                heapq.heappush(queue,data)
+    route_list = []
+    current_node = dest_node
+    while current_node != initial_node:
+        parent_node = G[current_node].parent
+        route_list.append(graph.get_edge(parent_node, current_node))
+        current_node = parent_node
+    route_list.reverse()
+    return route_list
+
+class Data:
+
+    def __init__(self, data, parent, cost):
+        self.data = data
+        self.cost = cost
+        self.parent = parent
+
+    def __eq__(self, other):
+        return self.cost == other.cost
+
+    def __lt__(self, other):
+        return self.cost < other.cost
+
 
 def a_star_search(graph, initial_node, dest_node):
     """
@@ -239,17 +244,14 @@ def get_Euclidean_distance(node1,node2):
 # def construct_graph(graph_path):
 #     """Helper function to construct graph given graph_path"""
 #     return lambda g: graph.construct_graph_from_file(g, graph_path)
-
+#
 # graph_1_path = 'c:/Users/ammar/Downloads/Python/cs4660-fall-2017-ammarbarafwala/cs4660/test/fixtures/graph-1.txt'
 # graph_2_path = 'c:/Users/ammar/Downloads/Python/cs4660-fall-2017-ammarbarafwala/cs4660/test/fixtures/graph-2.txt'
 # graph_1s = [graph.AdjacencyList(), graph.AdjacencyMatrix(), graph.ObjectOriented()]
 # graph_2s = [graph.AdjacencyList(), graph.AdjacencyMatrix(), graph.ObjectOriented()]
 # graph_1s = list(map(construct_graph(graph_1_path), graph_1s))
 # graph_2s = list(map(construct_graph(graph_2_path), graph_2s))
-
+#
 # for g in graph_1s:
-#     start_time = time.time()
-#     print(bfs(g, graph.Node(1), graph.Node(8)))
-
-#     print(time.time()," ", start_time)
+#     print(dijkstra_search(g, graph.Node(1), graph.Node(8)))
 #     break

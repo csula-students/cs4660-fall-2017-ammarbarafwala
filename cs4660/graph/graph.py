@@ -147,6 +147,12 @@ class AdjacencyList(object):
                 return each_edge
         return None
 
+    def distance(self, node_1, node_2):
+        for each_edge in self.adjacency_list[node_1]:
+            if each_edge.to_node == node_2:
+                return each_edge.weight
+        return -1
+
 class AdjacencyMatrix(object):
     def __init__(self):
         # adjacency_matrix should be a two dimensions array of numbers that
@@ -212,6 +218,9 @@ class AdjacencyMatrix(object):
     def get_edge(self,node_1,node_2):
         return Edge(node_1,node_2,self.adjacency_matrix[self.__get_node_index(node_1)][self.__get_node_index(node_2)])
 
+    def distance(self, node_1, node_2):
+        return self.adjacency_matrix[self.__get_node_index(node_1)][self.__get_node_index(node_2)]
+
 class ObjectOriented(object):
     """ObjectOriented defines the edges and nodes as both list"""
     def __init__(self):
@@ -261,4 +270,9 @@ class ObjectOriented(object):
         for each_edge in self.edges:
             if each_edge.from_node == node_1 and each_edge.to_node == node_2:
                 return each_edge
+        return None
+    def distance(self,node_1,node_2):
+        for each_edge in self.edges:
+            if each_edge.from_node == node_1 and each_edge.to_node == node_2:
+                return each_edge.weight
         return None
