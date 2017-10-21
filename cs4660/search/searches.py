@@ -96,19 +96,6 @@ class NodeDetail:
     def __lt__(self, other):
         return self.cost < other.cost
 
-
-def print_path(graph, initial_node, dest_node, path, parents):
-    if dest_node not in parents:
-        return None
-    if dest_node == initial_node:
-        return path
-    elif parents[dest_node] is None:
-        return None
-    else:
-        path.insert(0, graph.get_edge(parents[dest_node], dest_node))
-        print_path(graph, initial_node, parents[dest_node], path, parents)
-        return path
-
 def a_star_search(graph, initial_node, dest_node):
     node_cost = {initial_node:0}
     queue = []
