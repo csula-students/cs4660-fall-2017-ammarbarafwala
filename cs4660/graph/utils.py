@@ -1,5 +1,9 @@
-from . import graph
-
+"""
+utils package is for some quick utility methods
+such as parsing
+"""
+from . import graph as gr
+#from graph import Node, Edge
 class Tile(object):
     """Node represents basic unit of graph"""
     def __init__(self, x, y, symbol):
@@ -20,98 +24,66 @@ class Tile(object):
         return not self.__eq__(other)
 
     def __hash__(self):
-        return hash(str(self.x) + str(self.y) + self.symbol)
+        return hash(str(self.x) + "," + str(self.y) + self.symbol)
 
-def parse_grid_file(g, file_path):
-    x=0
-    y=0
-    f = open(file_path)
-    data = f.read()
-    data = data.split('\n')
-    i =0
-    while i < len(data):
-        j=0
-        while j <len(data[i]):
-            if (data[i][j] == '-' or data[i][j] =='+'):
-                x -=1
-                break
-            elif (data[i][j] == '|'):
-                j +=1
-                continue
-            elif (data[i][j] == '#' and data[i][j+1] =='#'):
-                 j +=2
-                 y +=1
-                 continue
-            else:
-                a = graph.Node(Tile(y,x,data[i][j]+data[i][j+1]))
-                g.add_node(a)
-                y +=1
-                j +=2
-        y =0
-        x +=1
-        i +=1
-    x = 0
-    y = 0
-    f = open(file_path)
-    data = f.read()
-    data = data.split('\n')
-    i = 0
-    while i < len(data):
-        j = 0
-        while j < len(data[i]):
-            if (data[i][j] == '-' or data[i][j] == '+'):
-                x -= 1
-                break
-            elif (data[i][j] == '|'):
-                j += 1
-                continue
-            elif (data[i][j] == '#' and data[i][j + 1] == '#'):
-                j += 2
-                y += 1
-                continue
-            else:
-                if (data[i + 1][j] != '-' and data[i + 1][j] != '+' and data[i + 1][j] != '#' and data[i + 1][
-                    j] != '|'):
-                    a = graph.Node(Tile(y, x, data[i][j] + data[i][j + 1]))
-                    b = graph.Node(Tile(y, x + 1, data[i + 1][j] + data[i + 1][j + 1]))
-                    g.add_edge(graph.Edge(a, b, 1))
-                if(data[i][j+2] != '-' and data[i][j+2] != '+' and data[i][j+2] != '#' and data[i][j+2] !='|'):
-                    a = graph.Node(Tile(y,x,data[i][j]+data[i][j+1]))
-                    b = graph.Node(Tile(y+1,x,data[i][j+2]+data[i][j+3]))
-                    g.add_edge(graph.Edge(a, b, 1))
-                if (data[i][j - 1] != '-' and data[i][j - 1] != '+' and data[i][j - 1] != '#' and data[i][
-                        j - 1] != '|'):
-                    a = graph.Node(Tile(y, x, data[i][j] + data[i][j + 1]))
-                    b = graph.Node(Tile(y - 1, x, data[i][j -2] + data[i][j -1]))
-                    g.add_edge(graph.Edge(a, b, 1))
-                if (data[i - 1][j] != '-' and data[i - 1][j] != '+' and data[i - 1][j] != '#' and data[i - 1][
-                    j] != '|'):
-                    a = graph.Node(Tile(y, x, data[i][j] + data[i][j + 1]))
-                    b = graph.Node(Tile(y, x - 1, data[i - 1][j] + data[i - 1][j + 1]))
-                    g.add_edge(graph.Edge(a, b, 1))
-                y += 1
-                j += 2
-        y = 0
-        x += 1
-        i += 1
-    return g
+
+
+def parse_grid_file(graph, file_path):
+    """
+    ParseGridFile parses the grid file implementation from the file path line
+    by line and construct the nodes & edges to be added to graph
+    Returns graph object
+    """
+    # TODO: read the filepaht line by line to construct nodes & edges
+    f = open(file_path, "r")
+    nodes =[]
+    edges = []
+    if f.mode == 'r':
+        fl = f.readlines()
+        length = len(fl)
+        for i in range(1, length-1, 1):
+            k = -1
+            for j in range(1, len(fl[i])-2, 2):
+               k +=1
+               if fl[i][j] == "#":
+                   continue
+               else:
+                   tile = Tile(k, i-1, fl[i][j] + "" + fl[i][j+1])
+                   graph.add_node(gr.Node(tile))
+                   if i > 1:
+                       if fl[i-1][j] != "#":
+                           to_tile = Tile(k, i-2, fl[i-1][j] + "" + fl[i-1][j+1])
+                           edges.append(gr.Edge(gr.Node(tile), gr.Node(to_tile), 1))
+                   if i < length - 2:
+                       if fl[i+1][j] !="#":
+                           to_tile = Tile(k, i, fl[i+1][j] + "" + fl[i+1][j+1])
+                           edges.append(gr.Edge(gr.Node(tile), gr.Node(to_tile), 1))
+                   if j < len(fl[i])-4:
+                       if fl[i][j+2] != "#":
+                           to_tile = Tile(k+1, i-1, fl[i][j+2] + "" + fl[i][j+3])
+                           edges.append(gr.Edge(gr.Node(tile), gr.Node(to_tile), 1))
+                   if j > 1:
+                       if fl[i][j - 1] != "#":
+                           to_tile = Tile(k-1, i-1, fl[i][j - 2] + "" + fl[i][j - 1])
+                           edges.append(gr.Edge(gr.Node(tile), gr.Node(to_tile), 1))
+
+        for edge in edges:
+            graph.add_edge(edge)
+    #TODO: for each node/edge above, add it to graph
+
+    return graph
 
 def convert_edge_to_grid_actions(edges):
-    a = ""
+    chars = []
     for edge in edges:
-        from_node = edge.from_node
-        to_node = edge.to_node
-        from_tile_x = from_node.data.x
-        from_tile_y = from_node.data.y
-        to_tile_x = to_node.data.x
-        to_tile_y = to_node.data.y
-
-        if(from_tile_x -to_tile_x >0):
-            a += "W"
-        elif (from_tile_x - to_tile_x < 0):
-            a +="E"
-        elif (from_tile_y - to_tile_y > 0):
-            a += "N"
-        elif (from_tile_y - to_tile_y < 0):
-            a += "S"
-    return a
+        if edge.to_node.data.x == edge.from_node.data.x:
+            if edge.to_node.data.y > edge.from_node.data.y:
+                chars.append("S")
+            else:
+                chars.append("N")
+        else:
+            if edge.to_node.data.x > edge.from_node.data.x:
+                chars.append("E")
+            else:
+                chars.append("W")
+    return ''.join(chars)

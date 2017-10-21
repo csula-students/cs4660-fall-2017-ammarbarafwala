@@ -2,6 +2,7 @@
 Searches module defines all different search algorithms
 """
 import heapq
+import math
 from collections import deque
 
 def bfs(graph, initial_node, dest_node):
@@ -96,28 +97,35 @@ class NodeDetail:
         return self.cost < other.cost
 
 
+def print_path(graph, initial_node, dest_node, path, parents):
+    if dest_node not in parents:
+        return None
+    if dest_node == initial_node:
+        return path
+    elif parents[dest_node] is None:
+        return None
+    else:
+        path.insert(0, graph.get_edge(parents[dest_node], dest_node))
+        print_path(graph, initial_node, parents[dest_node], path, parents)
+        return path
+
 def a_star_search(graph, initial_node, dest_node):
+    node_cost = {initial_node:0}
     queue = []
-    G = {}
-    S = {}
-    heapq.heappush(queue, NodeDetail(initial_node, None, 0))
-    current_obj = None
+    node = None
+    heapq.heappush(queue,NodeDetail(initial_node,None,0))
     while queue:
         current_obj = heapq.heappop(queue)
-        G[current_obj.node] = current_obj
         if current_obj.node == dest_node:
             break
-        for child_node in graph.neighbors(current_obj.node):
-            path_cost = current_obj.cost + graph.distance(current_obj.node, child_node)
-            if child_node not in G:
-                if child_node not in S:
-                    data = NodeDetail(child_node, current_obj, path_cost + heuristic(child_node, dest_node))
-                    S[child_node] = data
-                    heapq.heappush(queue, data)
-                elif S[child_node].cost > path_cost:
-                    S[child_node].parent_obj = current_obj
-                    S[child_node].cost = path_cost + heuristic(child_node, dest_node)
+        for child in graph.neighbors(current_obj.node):
+            new_cost = node_cost[current_obj.node] + graph.distance(current_obj.node, child)
+            if child not in node_cost or new_cost < node_cost[child]:
+                node_cost[child] = new_cost
+                estimate_cost = new_cost + heuristic(child, dest_node)
+                heapq.heappush(queue, NodeDetail(child, current_obj, estimate_cost))
     return route_list(graph, current_obj)
+
 
 def heuristic(node, goal):
     dx = abs(node.data.x - goal.data.x)
