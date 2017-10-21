@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5adc8003-9f3f-44b8-b849-9039afd32751" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cs4660/graph/utils.py" afterPath="$PROJECT_DIR$/cs4660/graph/utils.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cs4660/quiz/main.py" afterPath="$PROJECT_DIR$/cs4660/quiz/main.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cs4660/search/searches.py" afterPath="$PROJECT_DIR$/cs4660/search/searches.py" />
-    </list>
+    <list default="true" id="5adc8003-9f3f-44b8-b849-9039afd32751" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -83,7 +78,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="9" />
     <option name="y" value="9" />
     <option name="width" value="1346" />
@@ -223,7 +218,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18887262" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
