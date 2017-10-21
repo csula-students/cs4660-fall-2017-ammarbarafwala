@@ -129,6 +129,9 @@ class Data:
         self.cost = cost
         self.parent_id = parent_id
 
+    def __lt__(self, other):
+        return self.cost < other.cost
+
 if __name__ == "__main__":
 
     # Your code starts here

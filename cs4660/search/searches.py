@@ -53,38 +53,41 @@ def dfs_helper(graph, current_node, dest_node, visited_nodes, node_path):
     return node_path
 
 def dijkstra_search(graph, initial_node, dest_node):
-    """
-    Dijkstra Search
-    uses graph to do search from the initial_node to dest_node
-    returns a list of actions going from the initial node to dest_node
-    """
     queue = []
     G = {}
-    heapq.heapify(queue)
-    heapq.heappush(queue, Data(initial_node,None,0))
+    S={}
+    heapq.heappush(queue, NodeDetail(initial_node,None,0))
+    current_obj=None
     while queue:
-        node=heapq.heappop(queue)
-        for each_node in graph.neighbors(node.data):
-            path_cost=node.cost + graph.distance(node.data, each_node)
-            if each_node not in G or G[each_node].cost>path_cost:
-                data=Data(each_node, node.data, path_cost)
-                G[each_node]=data
-                heapq.heappush(queue,data)
-    route_list = []
-    current_node = dest_node
-    while current_node != initial_node:
-        parent_node = G[current_node].parent
-        route_list.append(graph.get_edge(parent_node, current_node))
-        current_node = parent_node
-    route_list.reverse()
-    return route_list
+        current_obj=heapq.heappop(queue)
+        G[current_obj.node] = current_obj
+        if current_obj.node == dest_node:
+            break
+        for child_node in graph.neighbors(current_obj.node):
+            path_cost=current_obj.cost + graph.distance(current_obj.node, child_node)
+            if child_node not in G:
+                if child_node not in S:
+                    data = NodeDetail(child_node, current_obj, path_cost)
+                    S[child_node] = data
+                    heapq.heappush(queue, data)
+                elif S[child_node].cost > path_cost:
+                    S[child_node].parent_obj = current_obj
+                    S[child_node].cost = path_cost
+    return route_list(graph, current_obj)
 
-class Data:
+def route_list(graph ,current_obj):
+    if current_obj.parent_obj is None:
+        return []
+    r_list=route_list(graph, current_obj.parent_obj)
+    r_list.append(graph.get_edge(current_obj.parent_obj.node, current_obj.node))
+    return r_list
 
-    def __init__(self, data, parent, cost):
-        self.data = data
+class NodeDetail:
+
+    def __init__(self, node, parent_obj, cost):
+        self.node = node
         self.cost = cost
-        self.parent = parent
+        self.parent_obj = parent_obj
 
     def __eq__(self, other):
         return self.cost == other.cost
@@ -94,164 +97,30 @@ class Data:
 
 
 def a_star_search(graph, initial_node, dest_node):
-    """
-    A* Search
-    uses graph to do search from the initial_node to dest_node
-    returns a list of actions going from the initial node to dest_node
-    """
-    source_tile = initial_node.data.x
-
-    #print(source_tile)
-
-    #get_heuristic_cost(initial_node, dest_node)
-
-
-
-
-
-    #print (dest_node)
-
-
-
-    Q = {}
-
-    hc = {}
-
-    visited_nodes = []
-
-    grey_nodes = []
-
-    parent = {}
-
-    nodes_distance = {}
-
-    Q[initial_node] = 0
-
-    hc[initial_node] = get_Euclidean_distance(initial_node, dest_node)
-
-    parent[initial_node] = None
-
-    nodes_distance[initial_node] = 0
-
-    last_node = dest_node
-
-    visited_nodes.append(initial_node)
-
-    while (bool(Q)):
-
-        current_node = min(hc, key=hc.get)
-
-        #print ("current node",current_node,get_heuristic_cost(current_node, dest_node))
-
-        hc.pop(current_node)
-
-        Q.pop(current_node)
-
-        visited_nodes.append(current_node)
-
-
-
-
-
-
-
-        for neighbor in graph.neighbors(current_node):
-
-            if ((neighbor not in visited_nodes and neighbor not in grey_nodes) or (nodes_distance[neighbor]>nodes_distance[current_node] + graph.distance(current_node, neighbor))):
-
-                Q[neighbor] = nodes_distance[current_node] + graph.distance(current_node, neighbor)
-
-                hc[neighbor] = get_Euclidean_distance(neighbor, dest_node) + graph.distance(current_node, neighbor)
-
-                nodes_distance[neighbor] = nodes_distance[current_node] + graph.distance(current_node, neighbor)
-
-                parent[neighbor] = current_node
-
-                grey_nodes.append(neighbor)
-
-
-
-        if (dest_node in visited_nodes):
-
+    queue = []
+    G = {}
+    S = {}
+    heapq.heappush(queue, NodeDetail(initial_node, None, 0))
+    current_obj = None
+    while queue:
+        current_obj = heapq.heappop(queue)
+        G[current_obj.node] = current_obj
+        if current_obj.node == dest_node:
             break
+        for child_node in graph.neighbors(current_obj.node):
+            path_cost = current_obj.cost + graph.distance(current_obj.node, child_node)
+            if child_node not in G:
+                if child_node not in S:
+                    data = NodeDetail(child_node, current_obj, path_cost + heuristic(child_node, dest_node))
+                    S[child_node] = data
+                    heapq.heappush(queue, data)
+                elif S[child_node].cost > path_cost:
+                    S[child_node].parent_obj = current_obj
+                    S[child_node].cost = path_cost + heuristic(child_node, dest_node)
+    return route_list(graph, current_obj)
 
-
-
-
-
-
-
-
-
-    # for i in  (nodes_distance):
-
-    #     pass
-
-      #  print (i),"Source",nodes_distance[i],"Dest:", get_heuristic_cost(i,dest_node)
-
-
-
-    list = []
-
-    while parent[last_node] is not None:
-
-
-
-        list = [graph.get_edge(parent[last_node], last_node)] + list
-
-        last_node = parent[last_node]
-
-        #print (last_node)
-
-    #print(list)
-
-
-
-    for i in list:
-
-        pass
-
-    return list
-
-
-
-
-
-def get_heuristic_cost(node1,node2):
-
-
-
-    xdifference= abs(node1.data.x-node2.data.x)
-
-    ydifference =abs(node1.data.y - node2.data.y)
-
-    return xdifference + ydifference
-
-
-
-def get_Euclidean_distance(node1,node2):
-
-    xdifference = ((node1.data.x - node2.data.x) ** 2)
-
-    ydifference = ((node1.data.y - node2.data.y) ** 2)
-
-    dis = ((xdifference + ydifference)**0.5)
-
-    return dis
-
-
-
-# def construct_graph(graph_path):
-#     """Helper function to construct graph given graph_path"""
-#     return lambda g: graph.construct_graph_from_file(g, graph_path)
-#
-# graph_1_path = 'c:/Users/ammar/Downloads/Python/cs4660-fall-2017-ammarbarafwala/cs4660/test/fixtures/graph-1.txt'
-# graph_2_path = 'c:/Users/ammar/Downloads/Python/cs4660-fall-2017-ammarbarafwala/cs4660/test/fixtures/graph-2.txt'
-# graph_1s = [graph.AdjacencyList(), graph.AdjacencyMatrix(), graph.ObjectOriented()]
-# graph_2s = [graph.AdjacencyList(), graph.AdjacencyMatrix(), graph.ObjectOriented()]
-# graph_1s = list(map(construct_graph(graph_1_path), graph_1s))
-# graph_2s = list(map(construct_graph(graph_2_path), graph_2s))
-#
-# for g in graph_1s:
-#     print(dijkstra_search(g, graph.Node(1), graph.Node(8)))
-#     break
+def heuristic(node, goal):
+    dx = abs(node.data.x - goal.data.x)
+    dy = abs(node.data.y - goal.data.y)
+    # D is a scale value for you to adjust performance vs accuracy
+    return 1 * (dx + dy)

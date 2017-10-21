@@ -22,15 +22,7 @@ class Tile(object):
     def __hash__(self):
         return hash(str(self.x) + str(self.y) + self.symbol)
 
-
-
 def parse_grid_file(g, file_path):
-    """
-    ParseGridFile parses the grid file implementation from the file path line
-    by line and construct the nodes & edges to be added to graph
-
-    Returns graph object
-    """
     x=0
     y=0
     f = open(file_path)
@@ -58,7 +50,6 @@ def parse_grid_file(g, file_path):
         y =0
         x +=1
         i +=1
-
     x = 0
     y = 0
     f = open(file_path)
@@ -103,26 +94,10 @@ def parse_grid_file(g, file_path):
         y = 0
         x += 1
         i += 1
-
-    # list = graph.get_graph()
-    # if list is not None:
-    #     for i in list:
-    #         print (i)
     return g
 
-    # TODO: read the filepaht line by line to construct nodes & edges
-
-    # TODO: for each node/edge above, add it to graph
-
-
 def convert_edge_to_grid_actions(edges):
-
-    # for i in edges:
-    #     print (i)
-
-
     a = ""
-
     for edge in edges:
         from_node = edge.from_node
         to_node = edge.to_node
@@ -139,11 +114,4 @@ def convert_edge_to_grid_actions(edges):
             a += "N"
         elif (from_tile_y - to_tile_y < 0):
             a += "S"
-
-    # print('in function')
-    # print (a)
-
-   # e.g. Edge(Node(Tile(1, 2), Tile(2, 2), 1)) => "S"
-    #"""
-
     return a
